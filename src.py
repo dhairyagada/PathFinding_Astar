@@ -66,12 +66,13 @@ for i in range(5):
     open_list=[current_node]             # List of Frontier Locations -- Visited But Not Explored
     l=len(open_list)
     print('Frontier',len(open_list))
-    explored_list=[]                        # List of Visted and Explored Locations
+    closed_list=[]                        # List of Visted and Explored Locations
 
     f=np.zeros((5,5))                       # Total Cost Function
    
     f[startrow,startcol]=h[startrow,startcol]   # Initial Cost is Heuristic Cost
-    while open_list!=0:
+    k=50
+    while k!=0:
         print('Inside Loop')
         print(open_list)
         l=len(open_list)
@@ -86,17 +87,36 @@ for i in range(5):
                 mincol=open_list[i][1]
 
         current_node=[minrow,mincol]
-
-        if(goalTest(current_node[0],current_node[1],endrow,endcol)): break
+        print('current node',current_node)
+        if(goalTest(current_node[0],current_node[1],endrow,endcol)):
+            print('-------------found--------------',k)
+            break
         
         node_successor=Succesors(current_node[0],current_node[1])
+        print(node_successor)
         nsl=len(node_successor)
+        print(nsl)
         for i in range(nsl):
-            succesor_cost=g[current_node[0],current_node[1]]+heuristic(current_node[0],current_node[1],
-            node_successor[i][0],node_successor[i][1])
+            """ succesor_cost=g[current_node[0],current_node[1]]+heuristic(current_node[0],current_node[1],
+            node_successor[i][0],node_successor[i][1]) """
+            print('Inside For Loop')
+            succesor_cost=g[current_node[0],current_node[1]]+h[node_successor[i][0],node_successor[i][1]]
+            print(succesor_cost)
             if [node_successor[i][0],node_successor[i][1]] in open_list:
-                if g[node_successor[i][0],node_successor[i][1]] <=succesor_cost: print('WHERE TO GO?')
-        open_list=0 
+                if g[node_successor[i][0],node_successor[i][1]] <=succesor_cost: continue
+            elif [node_successor[i][0],node_successor[i][1]] in closed_list:
+                if g[node_successor[i][0],node_successor[i][1]] <=succesor_cost: continue
+                closed_list.remove([node_successor[i][0],node_successor[i][1]])
+                open_list.append([node_successor[i][0],node_successor[i][1]])
+            else:
+                open_list.append([node_successor[i][0],node_successor[i][1]])
+                print('Appending to open list')
+        g[node_successor[i][0],node_successor[i][1]]=succesor_cost
+ 
+       
+        closed_list.append(current_node)
+        k=k-1
+        
 
 
 
@@ -106,7 +126,8 @@ print(copy_succ)
 copy_openlist=[[1,1],[1,2],[1,3],[1,4]]
 if[copy_succ[1][0],copy_succ[1][1]] in copy_openlist:
     print('y')
-
+    copy_openlist.remove([copy_succ[1][0],copy_succ[1][1]])
+print(copy_openlist)
 '''
     nodex_open=[]
     nodex_close=[]

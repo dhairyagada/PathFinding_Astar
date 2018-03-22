@@ -6,8 +6,8 @@ gridMap = np.array([[1, 1, 1, 0, 0],[0, 0, 0, 0, 1],[0, 1, 1, 0, 0],[0, 0, 1, 1,
 
 X=gridMap.shape[0]-1
 Y=gridMap.shape[1]-1
-print(X)
-print(Y)
+#print(X)
+#print(Y)
 ## Start Location 
 startrow = 2
 startcol = 0
@@ -16,11 +16,11 @@ startcol = 0
 endrow = 2
 endcol = 4
 
-print(gridMap)
+""" print(gridMap)
 print('Starting Location ',startrow,startcol)
 print('End Location ',endrow,endcol)
 print('Starting Pixel',gridMap[startrow,startcol])
-print('Ending Pixel',gridMap[endrow,endcol])
+print('Ending Pixel',gridMap[endrow,endcol]) """
 
 def heuristic(currentrow,currentcol,endrow,endcol):
     # Estimating Distance Between Point and End Location
@@ -58,14 +58,14 @@ for i in range(5):
         if gridMap[i,j]!=0:  
             g[i,j]=100 
 
-    print(h)
-    print(g)
+   # print(h)
+    #print(g)
     
     current_node=[startrow,startcol]         # Current Location Co-ordinates
     
     open_list=[current_node]             # List of Frontier Locations -- Visited But Not Explored
-    l=len(open_list)
-    print('Frontier',len(open_list))
+   # l=len(open_list)
+    #print('Frontier',len(open_list))
     closed_list=[]                        # List of Visted and Explored Locations
 
     f=np.zeros((5,5))                       # Total Cost Function
@@ -73,8 +73,8 @@ for i in range(5):
     f[startrow,startcol]=h[startrow,startcol]   # Initial Cost is Heuristic Cost
     k=50
     while k!=0:
-        print('Inside Loop')
-        print(open_list)
+        
+       # print(open_list)
         l=len(open_list)
         minval = 1000
         minrow=0
@@ -93,15 +93,15 @@ for i in range(5):
             break
         
         node_successor=Succesors(current_node[0],current_node[1])
-        print(node_successor)
+      #  print(node_successor)
         nsl=len(node_successor)
-        print(nsl)
+      #  print(nsl)
         for i in range(nsl):
             """ succesor_cost=g[current_node[0],current_node[1]]+heuristic(current_node[0],current_node[1],
             node_successor[i][0],node_successor[i][1]) """
-            print('Inside For Loop')
+        #    print('Inside For Loop')
             succesor_cost=g[current_node[0],current_node[1]]+h[node_successor[i][0],node_successor[i][1]]
-            print(succesor_cost)
+       #     print(succesor_cost)
             if [node_successor[i][0],node_successor[i][1]] in open_list:
                 if g[node_successor[i][0],node_successor[i][1]] <=succesor_cost: continue
             elif [node_successor[i][0],node_successor[i][1]] in closed_list:
@@ -110,7 +110,7 @@ for i in range(5):
                 open_list.append([node_successor[i][0],node_successor[i][1]])
             else:
                 open_list.append([node_successor[i][0],node_successor[i][1]])
-                print('Appending to open list')
+         #       print('Appending to open list')
         g[node_successor[i][0],node_successor[i][1]]=succesor_cost
  
        

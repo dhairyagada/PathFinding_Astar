@@ -46,42 +46,39 @@ cn=[startrow,startcol]
 
 ol=[cn]         # Open List   -- Frontier 
 cl=[]           # Closed List -- Explored List
-
+fl=[]
 f[ol[0][0],ol[0][1]]=h[ol[0][0],ol[0][1]]
-
-k=15
+k=20
 while k!=0:
     
-    ol_len=len(ol)
-    min_f=10000
-    for i in range(ol_len):
-        f[ol[i][0],ol[i][1]]=g[ol[i][0],ol[i][1]]+g[ol[i][0],ol[i][1]]
-        if min_f>f[ol[i][0],ol[i][1]]:
-            min_f=f[ol[i][0],ol[i][1]]
-            min_r=ol[i][0]
-            min_c=ol[i][1]
-    
-    cn=[min_r,min_c]
     if goalTest(cn[0],cn[1],endrow,endcol):
         break 
+
     neighbors=Succesors(cn[0],cn[1])
-    
-    cl.append(cn)
-    
     n_len=len(neighbors)
     min_succ=10000
+   # print(cn)
     for j in range(n_len):
-       
-       f[neighbors[j][0],neighbors[j][1]]=g[neighbors[j][0],neighbors[j][1]]+h[neighbors[j][0],neighbors[j][1]]
-       
-       if min_succ>f[neighbors[j][0],neighbors[j][1]]:
-            min_succ=f[neighbors[j][0],neighbors[j][1]]
-            min_sr=neighbors[j][0]
-            min_sc=neighbors[j][1]
-      
+        
+        f[neighbors[j][0],neighbors[j][1]]=g[neighbors[j][0],neighbors[j][1]]+h[neighbors[j][0],neighbors[j][1]]
+        if [neighbors[j][0],neighbors[j][1]] not in fl:
+            f[neighbors[j][0],neighbors[j][1]]=f[neighbors[j][0],neighbors[j][1]]+f[cn[0],cn[1]]
+            fl.append([neighbors[j][0],neighbors[j][1]])                                      
+    if min_succ>=f[neighbors[j][0],neighbors[j][1]]:
+        min_succ=f[neighbors[j][0],neighbors[j][1]]
+        min_sr=neighbors[j][0]
+        min_sc=neighbors[j][1]
+
+    cn=[min_sr,min_sc]
+
+    for i in range(len(ol)):
+        if f[cn[0],cn[1]] > f[ol[i][0],ol[i][1]]:
+            cn= [ol[i][0],ol[i][1]]
     
-    ol.append([min_sr,min_sc])
+    for j in range(n_len):
+        ol.append([neighbors[j][0],neighbors[j][1]])
     ol.remove(cn)
-    print(ol)
+
+    print(cn)
     k=k-1
     

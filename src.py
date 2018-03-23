@@ -80,7 +80,8 @@ for i in range(5):
         minrow=0
         mincol=0
         for i in range(l):
-            f[open_list[i][0],open_list[i][1]]=g[open_list[i][0],open_list[i][1]]+h[open_list[i][0],open_list[i][1]]
+            f[open_list[i][0],open_list[i][1]]=g[open_list[i][0],open_list[i][1]]+heuristic(open_list[i][0],open_list[i][1],
+            endrow,endcol) 
             if minval>=f[open_list[i][0],open_list[i][1]]:
                 minval=f[open_list[i][0],open_list[i][1]]
                 minrow=open_list[i][0]
@@ -97,10 +98,10 @@ for i in range(5):
         nsl=len(node_successor)
       #  print(nsl)
         for i in range(nsl):
-            """ succesor_cost=g[current_node[0],current_node[1]]+heuristic(current_node[0],current_node[1],
-            node_successor[i][0],node_successor[i][1]) """
-        #    print('Inside For Loop')
-            succesor_cost=g[current_node[0],current_node[1]]+h[node_successor[i][0],node_successor[i][1]]
+            succesor_cost=g[current_node[0],current_node[1]]+heuristic(current_node[0],current_node[1],
+            node_successor[i][0],node_successor[i][1]) 
+    #    print('Inside For Loop')
+            #succesor_cost=g[current_node[0],current_node[1]]+h[node_successor[i][0],node_successor[i][1]]
        #     print(succesor_cost)
             if [node_successor[i][0],node_successor[i][1]] in open_list:
                 if g[node_successor[i][0],node_successor[i][1]] <=succesor_cost: continue
@@ -115,7 +116,7 @@ for i in range(5):
  
        
         closed_list.append(current_node)
-        k=k-1
+    k=k-1
         
 
 

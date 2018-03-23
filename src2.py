@@ -49,7 +49,7 @@ cl=[]           # Closed List -- Explored List
 
 f[ol[0][0],ol[0][1]]=h[ol[0][0],ol[0][1]]
 
-k=3
+k=15
 while k!=0:
     
     ol_len=len(ol)
@@ -62,24 +62,24 @@ while k!=0:
             min_c=ol[i][1]
     
     cn=[min_r,min_c]
-    if goalTest(cn[0],cn[1],endrow,endcol) and cn not in ol:
+    if goalTest(cn[0],cn[1],endrow,endcol):
         break 
     neighbors=Succesors(cn[0],cn[1])
-    #print(neighbors)
+    
     cl.append(cn)
     
     n_len=len(neighbors)
     min_succ=10000
     for j in range(n_len):
-       #print(j)
+       
        f[neighbors[j][0],neighbors[j][1]]=g[neighbors[j][0],neighbors[j][1]]+h[neighbors[j][0],neighbors[j][1]]
-       #print(f[neighbors[j][0],neighbors[j][1]])
+       
        if min_succ>f[neighbors[j][0],neighbors[j][1]]:
             min_succ=f[neighbors[j][0],neighbors[j][1]]
             min_sr=neighbors[j][0]
             min_sc=neighbors[j][1]
       
-    #print(min_sr,min_sc)
+    
     ol.append([min_sr,min_sc])
     ol.remove(cn)
     print(ol)

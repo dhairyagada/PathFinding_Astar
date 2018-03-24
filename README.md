@@ -30,11 +30,3 @@ https://rosettacode.org/wiki/A*_search_algorithm <br>
 http://mat.uab.cat/~alseda/MasterOpt/AStar-Algorithm.pdf <br>
 <br>
 https://classroom.udacity.com/courses/cs271  (Part 2 Problem Solving)
-
-
-## Screenshots
-
-<img src="./LargeMaze.png" width=40%>   
-<br>
-<br>
-<img src="./5x5Maze.png" width=40%>

@@ -1,5 +1,6 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
+from matplotlib import colors
 """ gridMap =  np.array([[0,0,0,1,0,0,1,1,1,0,1,0,1,0],
             [1,1,1,1,1,0,1,0,1,0,1,1,1,0],
             [1,1,1,0,1,1,0,1,1,0,1,0,1,0],
@@ -50,9 +51,7 @@ def heuristic(currentrow,currentcol,endrow,endcol):
     d=np.sqrt(d)
     return d
 
-def goalTest(currentrow,currentcol,endrow,endcol):
-    # Testing if the current position is goal position
-    return (currentrow==endrow and currentcol==endcol)
+
 
 # Generating Succesors
 Succesors = lambda x, y : [(x2, y2) for x2 in range(x-1, x+2)
@@ -126,9 +125,25 @@ while len(ol) > 0:
         h = heuristic(neighbour[0],neighbour[1],endrow,endcol)
         f[neighbour] = g[neighbour] + h
 
-gridDisplay=np.array(gridMap)
+""" gridDisplay=np.array(gridMap)
 
 for each in path:
     gridDisplay[each[0],each[1]]=4
 
-print(gridDisplay)
+print(gridDisplay) """
+
+
+
+cmap = colors.ListedColormap(['white', 'black'])
+bounds = [0,1,5]
+norm = colors.BoundaryNorm(bounds, cmap.N)
+
+fig, ax = plt.subplots()
+ax.imshow(gridMap, cmap=cmap, norm=norm)
+
+ax.grid(which='major', axis='both', linestyle='-', color='k', linewidth=2)
+ax.set_xticks(np.arange(-0.5,gridMap.shape[1],gridMap.shape[1]))
+ax.set_yticks(np.arange(-0.5,gridMap.shape[0],gridMap.shape[0]))
+
+ax.plot(np.asarray(path)[:,1], np.asarray(path)[:,0])
+plt.show()

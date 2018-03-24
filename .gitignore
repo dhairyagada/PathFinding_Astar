@@ -101,3 +101,7 @@ ENV/
 .mypy_cache/
 
 *.json
+
+somecode.py
+TreeEx.py
+A_Star.py

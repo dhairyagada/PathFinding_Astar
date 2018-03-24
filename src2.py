@@ -1,6 +1,10 @@
 import numpy as np
 
-gridMap = np.array([[1, 1, 1, 0, 0],[0, 0, 1, 1, 1],[0, 1, 1, 1, 0],[0, 0, 1, 1, 0],[1, 0, 0, 0, 0]]) 
+gridMap = np.array([[1, 1, 1, 0, 0],
+                    [0, 0, 0, 0, 1],
+                    [0, 1, 1, 0, 0],
+                    [0, 0, 1, 1, 0],
+                    [1, 0, 0, 0, 0]]) 
 
 X=gridMap.shape[0]-1
 Y=gridMap.shape[1]-1
@@ -67,22 +71,22 @@ while len(ol) > 0:
         if current is None or f[pos] < currentFScore:
             currentFScore = f[pos]
             current = pos
-
+    ol.remove(current)
+    cl.add(current)
     if current == end:
 			#Retrace our route backward
             	
         path = [current]
-        print ("Current", current)
+        #print ("Current", current)
         while current in parent:
             current = parent[current]
             path.append(current)
        
         path.reverse()
         print(path)
-
-    ol.remove(current)
-    cl.add(current)
-
+    
+   
+    
     for neighbour in Succesors(current[0],current[1]):
         if neighbour in cl: 
             continue #We have already processed this node exhaustively
@@ -98,3 +102,4 @@ while len(ol) > 0:
         g[neighbour] = candidateG
         h = heuristic(neighbour[0],neighbour[1],endrow,endcol)
         f[neighbour] = g[neighbour] + h
+

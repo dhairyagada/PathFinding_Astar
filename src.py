@@ -1,26 +1,46 @@
 import numpy as np
-#from anytree import Node, RenderTree, AsciiStyle
-#import anytree
+
+""" gridMap =  np.array([[0,0,0,1,0,0,1,1,1,0,1,0,1,0],
+            [1,1,1,1,1,0,1,0,1,0,1,1,1,0],
+            [1,1,1,0,1,1,0,1,1,0,1,0,1,0],
+            [1,0,0,1,0,1,0,1,1,0,0,1,1,0],
+            [0,0,0,0,1,1,1,1,0,1,1,1,1,0],
+            [0,1,1,0,0,1,0,0,0,1,0,0,0,0],
+            [1,1,0,1,1,0,0,0,1,1,0,0,0,0],
+            [1,1,0,1,0,1,0,1,0,0,1,1,0,1],
+            [1,1,1,0,1,0,1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,1,0,1,0,1,1,0,0],
+            [0,0,0,0,0,0,0,0,1,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,1,0,1,0,1,1],
+            [1,1,0,0,0,1,1,1,1,0,0,0,1,1],
+            [1,1,0,1,0,1,0,0,1,1,0,1,0,0],
+            [0,0,0,1,1,1,0,0,1,1,0,0,0,0],    
+            [0,0,1,0,0,0,0,0,0,1,1,0,0,0],
+            [1,0,1,1,0,1,0,0,0,1,1,0,0,0],
+            [0,0,1,0,0,1,0,1,0,1,1,0,1,0],
+            [1,0,0,0,0,1,1,1,0,1,0,0,0,0],
+            [0,0,0,1,0,0,1,0,0,1,0,1,0,1],
+            [0,0,0,1,0,0,0,1,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1,1,1,1,1,0,1,1],
+            [1,1,1,1,1,1,0,0,0,1,0,1,0,0],
+            [0,0,1,1,0,0,0,0,0,0,1,0,1,1],
+            [1,1,1,1,0,1,0,1,0,0,1,1,1,1],
+            [1,1,1,1,0,1,0,1,1,0,0,1,0,1],
+            [0,1,0,0,0,0,1,0,0,0,0,0,1,0],
+            [0,1,0,0,1,0,1,0,0,0,1,0,1,0],
+            [1,1,0,1,1,1,1,1,0,0,1,0,1,0]]) """
 
 gridMap = np.array([[1, 1, 1, 0, 0],[0, 0, 0, 0, 1],[0, 1, 1, 0, 0],[0, 0, 1, 1, 0],[1, 0, 0, 0, 0]]) 
-
 X=gridMap.shape[0]-1
 Y=gridMap.shape[1]-1
-#print(X)
-#print(Y)
+
 ## Start Location 
-startrow = 2
+startrow = int(X/2)
 startcol = 0
 
 ## End Location
-endrow = 2
-endcol = 4
-
-""" print(gridMap)
-print('Starting Location ',startrow,startcol)
-print('End Location ',endrow,endcol)
-print('Starting Pixel',gridMap[startrow,startcol])
-print('Ending Pixel',gridMap[endrow,endcol]) """
+endrow = int(X/2)
+endcol = int(Y)
 
 def heuristic(currentrow,currentcol,endrow,endcol):
     # Estimating Distance Between Point and End Location
@@ -34,9 +54,6 @@ def goalTest(currentrow,currentcol,endrow,endcol):
     # Testing if the current position is goal position
     return (currentrow==endrow and currentcol==endcol)
 
-
-    
-
 # Generating Succesors
 Succesors = lambda x, y : [(x2, y2) for x2 in range(x-1, x+2)
                                             for y2 in range(y-1, y+2)
@@ -44,105 +61,74 @@ Succesors = lambda x, y : [(x2, y2) for x2 in range(x-1, x+2)
                                                     (x != x2 or y != y2) and
                                                     (0 <= x2 <= X) and 
                                                     (0 <= y2 <= Y))]
-                                   
 
-# Generating Heuristic Matrix
+def move_cost(cr,cc,nr,nc):
+    if gridMap[nr,nc]==1:
+        return 1000
+    else:
+        return np.sqrt((cr-nr)**2+(cc-nc)**2)
 
-h=np.zeros((5,5))
-g=np.zeros((5,5))
-f=np.zeros((5,5))
+start=(startrow,startcol)
+end=(endrow,endcol)
 
-for i in range(5):
-    for j in range(5):
-        h[i,j]=heuristic(i,j,endrow,endcol)
-        if gridMap[i,j]!=0:  
-            g[i,j]=100 
+g={}
+f={}
 
-   # print(h)
-    #print(g)
-    
-    current_node=[startrow,startcol]         # Current Location Co-ordinates
-    
-    open_list=[current_node]             # List of Frontier Locations -- Visited But Not Explored
-   # l=len(open_list)
-    #print('Frontier',len(open_list))
-    closed_list=[]                        # List of Visted and Explored Locations
+''' --------------------- INITIALIZATIONS------------------------------------
+'''
 
-    f=np.zeros((5,5))                       # Total Cost Function
-   
-    f[startrow,startcol]=h[startrow,startcol]   # Initial Cost is Heuristic Cost
-    k=50
-    while k!=0:
-        
-       # print(open_list)
-        l=len(open_list)
-        minval = 1000
-        minrow=0
-        mincol=0
-        for i in range(l):
-            f[open_list[i][0],open_list[i][1]]=g[open_list[i][0],open_list[i][1]]+heuristic(open_list[i][0],open_list[i][1],
-            endrow,endcol) 
-            if minval>=f[open_list[i][0],open_list[i][1]]:
-                minval=f[open_list[i][0],open_list[i][1]]
-                minrow=open_list[i][0]
-                mincol=open_list[i][1]
+g[start]=0
+f[start]=heuristic(startrow,startcol,endrow,endcol)
 
-        current_node=[minrow,mincol]
-        print('current node',current_node)
-        if(goalTest(current_node[0],current_node[1],endrow,endcol)):
-            print('-------------found--------------',k)
-            break
-        
-        node_successor=Succesors(current_node[0],current_node[1])
-      #  print(node_successor)
-        nsl=len(node_successor)
-      #  print(nsl)
-        for i in range(nsl):
-            succesor_cost=g[current_node[0],current_node[1]]+heuristic(current_node[0],current_node[1],
-            node_successor[i][0],node_successor[i][1]) 
-    #    print('Inside For Loop')
-            #succesor_cost=g[current_node[0],current_node[1]]+h[node_successor[i][0],node_successor[i][1]]
-       #     print(succesor_cost)
-            if [node_successor[i][0],node_successor[i][1]] in open_list:
-                if g[node_successor[i][0],node_successor[i][1]] <=succesor_cost: continue
-            elif [node_successor[i][0],node_successor[i][1]] in closed_list:
-                if g[node_successor[i][0],node_successor[i][1]] <=succesor_cost: continue
-                closed_list.remove([node_successor[i][0],node_successor[i][1]])
-                open_list.append([node_successor[i][0],node_successor[i][1]])
-            else:
-                open_list.append([node_successor[i][0],node_successor[i][1]])
-         #       print('Appending to open list')
-        g[node_successor[i][0],node_successor[i][1]]=succesor_cost
- 
+cl=set()
+ol=set([start])
+
+parent={}
+
+while len(ol) > 0:
+
+    current = None
+    currentFScore = None
+
+    for pos in ol:
+        if current is None or f[pos] < currentFScore:
+            currentFScore = f[pos]
+            current = pos
+    ol.remove(current)
+    cl.add(current)
+    if current == end:
+			#Retrace our route backward
+            	
+        path = [current]
+        #print ("Current", current)
+        while current in parent:
+            current = parent[current]
+            path.append(current)
        
-        closed_list.append(current_node)
-    k=k-1
-        
+        path.reverse()
+        print('Path is :',path)
+    
+   
+    
+    for neighbour in Succesors(current[0],current[1]):
+        if neighbour in cl: 
+            continue #We have already processed this node exhaustively
+        candidateG = g[current] + move_cost(current[0],current[1], neighbour[0],neighbour[1])
 
+        if neighbour not in ol:
+            ol.add(neighbour) #Discovered a new vertex
+        elif candidateG >= g[neighbour]:
+            continue #This G score is worse than previously found
 
+        #Adopt this G score
+        parent[neighbour] = current
+        g[neighbour] = candidateG
+        h = heuristic(neighbour[0],neighbour[1],endrow,endcol)
+        f[neighbour] = g[neighbour] + h
 
+gridDisplay=np.array(gridMap)
 
-copy_succ=Succesors(2,4)
-print(copy_succ)
-copy_openlist=[[1,1],[1,2],[1,3],[1,4]]
-if[copy_succ[1][0],copy_succ[1][1]] in copy_openlist:
-    print('y')
-    copy_openlist.remove([copy_succ[1][0],copy_succ[1][1]])
-print(copy_openlist)
-'''
-    nodex_open=[]
-    nodex_close=[]
+for each in path:
+    gridDisplay[each[0],each[1]]=4
 
-        nodex.append(Node([2,0]))
-        nodex.append(Node([1,2],parent=nodex[0]))
-        nodex.append(Node([0,1],parent=nodex[0]))
-        nodex.append(Node([0,2],parent=nodex[2],state="f"))
-        print(RenderTree(nodex[0]))
-        print(()!=anytree.search.findall_by_attr(nodex[0], name="state",value="f"))
-
-
-    nodex_open.append(Node([startrow,startcol]))
-    f[startrow,startcol]=g[startrow,startcol]
-    print([2,0]==nodex_open[0])
-    #while nodex_open!=[]:
-'''
+print(gridDisplay)
